@@ -9,9 +9,9 @@
 기존의 적은 요소를 포함하는 리스트를 만드는 코드
 ```java
 List<String> friends = new ArrayList<>();
-		friends.add("Raphael");
-		friends.add("Olivia");
-		friends.add("Thibaut");
+friends.add("Raphael");
+friends.add("Olivia");
+friends.add("Thibaut");
 ```
 다음처럼 Arrays.asList() 팩토리 메서드를 이용하면 코드를 간단하게 줄일 수 있다.  
 ```java
@@ -92,9 +92,9 @@ System.out.println(ageOfFriends);
 이 메서드는 키와 값을 감쌀 추가 객체 할당을 필요로 한다.  
 ```java
 Map<String, Integer> ageOfFriends = Map.ofEntries(entry("Rapheal", 30),
-			entry("Olivia", 25),
-			entry("Thibaut", 26));
-		System.out.println(ageOfFriends);
+					entry("Olivia", 25),
+					entry("Thibaut", 26));
+System.out.println(ageOfFriends);
 ```
 Map.entry는 Map.Entry 객체를 만드는 새로운 팩터리 메서드다.  
   
@@ -112,19 +112,19 @@ Java 8에 removeIf와 replaceAll를 추가한 이유가 바로 이 때문이다.
 다음은 숫자로 시작되는 참조 코드를 가진 트랜잭션을 삭제하는 코드입니다.  
 ```java
 for (Transaction transaction : transactions) {
-			if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
-				transactions.remove(transaction);
-			}
-		}
+	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
+		transactions.remove(transaction);
+	}
+}
 ```
 위 코드는 ConcurrentModificationException을 일으킵니다. 내부적으로 for-each 루프는 Iterator 객체를 사용하므로 위 코드는 다음과 같이 해석됩니다.  
 ```java
 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-			Transaction transaction = iterator.next();
-			if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
-				transactions.remove(transaction);
-			}
-		}
+	Transaction transaction = iterator.next();
+	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
+	transactions.remove(transaction);
+	}
+}
 ```
 두 개의 개별 객체가 컬렉션을 관리한다는 사실을 주목해봅니다.  
 - Iterator 객체, next(), hasNext()를 이용해 소스를 질의합니다.  
@@ -134,11 +134,11 @@ for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext(
 메서드를 호출함으로 이 문제를 해결할 수 있다.  
 ```java
 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-			Transaction transaction = iterator.next();
-			if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
-				iterator.remove();
-			}
-		}
+	Transaction transaction = iterator.next();
+	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
+	iterator.remove();
+	}
+}
 ```
 이 코드 패턴은 Java 8의 removeIf 메서드로 바꿀 수 있습니다.  
 removeIf는 삭제할 요소를 가리키는 프레디케이트를 인수로 받습니다.  
@@ -152,19 +152,19 @@ List 인터페이스의 replaceAll 메서드를 이용해 리스트의 각 요�
 스트림 API를 사용하면 다음처럼 문제를 해결할 수 있었다.  
 ```java
 List<String> referenceCodes = Arrays.asList("a12", "C14", "b13");
-		referenceCodes.stream()
-			.map(code -> Character.toUpperCase(code.charAt(0)) + code.substring(1))
-			.collect(Collectors.toList())
-			.forEach(System.out::println);
+referenceCodes.stream()
+	.map(code -> Character.toUpperCase(code.charAt(0)) + code.substring(1))
+	.collect(Collectors.toList())
+	.forEach(System.out::println);
 ```
 하지만 이 코드는 새 문자열 컬렉션을 만듭니다. 우리가 원하는 것은 기존 컬렉션을 바꾸는 것입니다.  
 ```java
 for (ListIterator<String> iterator = referenceCodes.listIterator();
 		iterator.hasNext();) {
-			String code = iterator.next();
-			iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
-		}
-		System.out.println(referenceCodes);
+		String code = iterator.next();
+		iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
+	}
+System.out.println(referenceCodes);
 ```
 코드가 조금 복잡해졌습니다. Java 8의 기능을 이용하면 다음처럼 간단하게 구현할 수 있습니다.  
 ```java
