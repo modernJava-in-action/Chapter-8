@@ -25,7 +25,7 @@ friends.set(0, "Richard");
 try {
 	friends.add("Thibaut");
 } catch (UnsupportedOperationException e) {
-e.printStackTrace();
+	e.printStackTrace();
 }
 ```
   
@@ -160,8 +160,8 @@ referenceCodes.stream()
 하지만 이 코드는 새 문자열 컬렉션을 만듭니다. 우리가 원하는 것은 기존 컬렉션을 바꾸는 것입니다.  
 ```java
 for (ListIterator<String> iterator = referenceCodes.listIterator();iterator.hasNext();) {
-String code = iterator.next();
-iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
+	String code = iterator.next();
+	iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
 }
 System.out.println(referenceCodes);
 ```
