@@ -21,12 +21,12 @@ List<String> friends = Arrays.asList("Raphael", "Olivia", "Thibaut");
 예를 들어 요소를 갱신하는 작업은 괜찮지만 요소를 추가하려 하면 UnsupportedOperationException이 발생한다.  
 ```java
 List<String> friends = Arrays.asList("Raphael", "Olivia", "Thibaut");
-		friends.set(0, "Richard");
-		try {
-			friends.add("Thibaut");
-		} catch (UnsupportedOperationException e) {
-			e.printStackTrace();
-		}
+friends.set(0, "Richard");
+try {
+	friends.add("Thibaut");
+} catch (UnsupportedOperationException e) {
+e.printStackTrace();
+}
 ```
   
 내부적으로 고정된 크기의 변환할 수 있는 배열로 구현되었기 때문에 이와 같은 일이 일어납니다.  
@@ -113,14 +113,14 @@ Java 8에 removeIf와 replaceAll를 추가한 이유가 바로 이 때문이다.
 ```java
 for (Transaction transaction : transactions) {
 	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
-		transactions.remove(transaction);
+	transactions.remove(transaction);
 	}
 }
 ```
 위 코드는 ConcurrentModificationException을 일으킵니다. 내부적으로 for-each 루프는 Iterator 객체를 사용하므로 위 코드는 다음과 같이 해석됩니다.  
 ```java
 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-	Transaction transaction = iterator.next();
+Transaction transaction = iterator.next();
 	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
 	transactions.remove(transaction);
 	}
@@ -134,7 +134,7 @@ for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext(
 메서드를 호출함으로 이 문제를 해결할 수 있다.  
 ```java
 for (Iterator<Transaction> iterator = transactions.iterator(); iterator.hasNext();) {
-	Transaction transaction = iterator.next();
+Transaction transaction = iterator.next();
 	if (Character.isDigit(transaction.getReferenceCode().charAt(0))) {
 	iterator.remove();
 	}
@@ -159,11 +159,10 @@ referenceCodes.stream()
 ```
 하지만 이 코드는 새 문자열 컬렉션을 만듭니다. 우리가 원하는 것은 기존 컬렉션을 바꾸는 것입니다.  
 ```java
-for (ListIterator<String> iterator = referenceCodes.listIterator();
-		iterator.hasNext();) {
-		String code = iterator.next();
-		iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
-	}
+for (ListIterator<String> iterator = referenceCodes.listIterator();iterator.hasNext();) {
+String code = iterator.next();
+iterator.set(Character.toUpperCase(code.charAt(0)) + code.substring(1));
+}
 System.out.println(referenceCodes);
 ```
 코드가 조금 복잡해졌습니다. Java 8의 기능을 이용하면 다음처럼 간단하게 구현할 수 있습니다.  
